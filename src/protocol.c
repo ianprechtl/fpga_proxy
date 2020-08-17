@@ -122,7 +122,7 @@ uint32_t protocol_write(pHandle pInst, char *pBuffer, uint32_t n_bytes, uint32_t
 	}
 }
 
-uint32_t protocol_fpga_config(pHandle pInst, uint32_t data, uint32_t addr){
+uint32_t protocol_fpga_config(pHandle pInst, uint32_t addr, uint32_t data){
 // NOTE: legacy command, not well commented b.c. should not be used anymore 
 
 	// make tx buffer
@@ -145,4 +145,24 @@ uint32_t protocol_fpga_config(pHandle pInst, uint32_t data, uint32_t addr){
 	// return of 0 means the request is executed and ackowledged
 	// anything else is an error
 	return *(uint32_t *)rx_buffer; 
+}
+
+uint32_t protocol_cache_fusion(pHandle pInst, char *pBuffer, uint32_t addr, uint32_t data){
+
+	// make the command packet
+	char tx_buffer[4*BYTES_PER_WORD];
+	*(uint32_t *)(tx_buffer+0*BYTES_PER_WORD) = PROTOCOL_INIT_PACKET; 			// initiator
+	*(uint32_t *)(tx_buffer+1*BYTES_PER_WORD) = PROTOCOL_FLAG_CACHE_FUSION; 	// config flag
+	*(uint32_t *)(tx_buffer+2*BYTES_PER_WORD) = addr;
+	*(uint32_t *)(tx_buffer+3*BYTES_PER_WORD) = data;
+
+	// send packet
+	if(jtag_write(pInst, tx_buffer, 4*BYTES_PER_WORD)){
+		return 1;
+	}
+
+	// get data
+	jtag_read(pInst, pBuffer, 16*BYTES_PER_WORD);
+
+	return 0;
 }

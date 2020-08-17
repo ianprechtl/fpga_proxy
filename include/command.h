@@ -11,10 +11,10 @@
 
 // lookup table for command
 // LOAD & VERIFY are from fpga_elf.h
-static const char *pCodes[] 	= {"CLOSE", "READ", "WRITE","LOAD", "VERIFY",	"CONFIG", 	"RUN"	};
-static const char n_fields[] 	= {1, 		2, 		3, 		2, 		2, 			3,  		2		};
-static const bool field1_hex[] 	= {false, 	true, 	true, 	false, 	false, 		true, 		false	}; 
-static const bool field2_hex[] 	= {false, 	false, 	true, 	false, 	false,	 	true, 		false 	};
+static const char *pCodes[] 	= {"CLOSE", "READ", "WRITE","LOAD", "VERIFY",	"CONFIG", 	"RUN",	"SCRIPT"	};
+static const char n_fields[] 	= {1, 		2, 		3, 		2, 		2, 			3,  		2, 		2			};
+static const bool field1_hex[] 	= {false, 	true, 	true, 	false, 	false, 		true, 		false, 	false		}; 
+static const bool field2_hex[] 	= {false, 	false, 	true, 	false, 	false,	 	true, 		false, 	false 		};
 
 
 typedef struct command{
@@ -24,19 +24,6 @@ typedef struct command{
 	uint32_t 	field1_number; 						// field0 converted to number
 	uint32_t 	field2_number; 						// field1 converted to number
 } command;
-
-
-// lookup table for the command
-// mneumonic, fields, hex, etc.
-/*static const char* codes[] 		= {	"READ",	"WRITE",	"READB",	"LOAD",		"VERIFY",	"CONFIG", 	"RUN",		"TEST", 	"RUN_SAMPLER", 	"SAMPLE_ALL",
-									"RUN_SCOPE_ALL" };
-static const char n_fields[] 	= {	2, 		3, 			3, 			2, 			2, 			3, 			2, 			1, 			2, 				1,
-									1 };
-static const bool field1_hex[] 	= {	true, 	true, 		true, 		false, 		false, 		true, 		false, 		false, 		false, 			false,
-									false };
-static const bool field2_hex[] 	= {	false, 	true, 		true, 		false, 		false, 		true, 		false, 		false, 		false, 			false,
-									false };*/
-
 
 
 uint32_t 		parse_input(command *pCommand, char *pBuffer);

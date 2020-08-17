@@ -38,6 +38,20 @@ uint32_t proxy_terminal_command(pHandle pInst){
 
 }
 
+uint32_t proxy_string_command(pHandle pInst, char *command_str){
+
+	// use string command to populate command data structure
+	command command_inst; 
+
+	if(parse_input(&command_inst, command_str)){
+		return 1;
+	}
+
+	// execute the command on successfully parse command
+	return proxy_execute(pInst, &command_inst);
+
+}
+
 uint32_t proxy_execute(pHandle pInst, command *pCommand){
 
 	// execute the command specified by the lookup table index (found during parsing)
@@ -54,8 +68,8 @@ uint32_t proxy_execute(pHandle pInst, command *pCommand){
 		// --------------------------------------------------
 		case 1:
 		{
-			char rx_buffer[4];
-			if (protocol_read(pInst, rx_buffer, 4, pCommand->field1_number)){
+			char rx_buffer[BYTES_PER_WORD];
+			if (protocol_read(pInst, rx_buffer, BYTES_PER_WORD, pCommand->field1_number)){
 				return 1;
 			}
 			else{
@@ -68,7 +82,7 @@ uint32_t proxy_execute(pHandle pInst, command *pCommand){
 		// --------------------------------------------------
 		case 2:
 		{
-			if (protocol_write(pInst, (char *)&pCommand->field2_number, 4, pCommand->field1_number)){
+			if (protocol_write(pInst, (char *)&pCommand->field2_number, BYTES_PER_WORD, pCommand->field1_number)){
 				return 1;
 			}
 			else{
@@ -79,25 +93,23 @@ uint32_t proxy_execute(pHandle pInst, command *pCommand){
 
 		// LOAD (fpga_elf_dma extension command)
 		// --------------------------------------------------
-		case 3:
-		{
-			return fpga_load_memory(pInst, pCommand);
-		}
+		case 3: return fpga_load_memory(pInst, pCommand);
 
 		// VERIFY (fpga_elf_dma extension command)
 		// --------------------------------------------------
-		case 4:
-		{
-			return fpga_verify_memory(pInst, pCommand);
-		}
+		case 4: return fpga_verify_memory(pInst, pCommand);
 
 		// CONFIG (legacy)
 		// --------------------------------------------------
-		case 5:
-		{
-			return protocol_fpga_config(pInst, pCommand->field1_number, pCommand->field2_number);
-		}
+		case 5: return protocol_fpga_config(pInst, pCommand->field1_number, pCommand->field2_number);
 
+		// RUN
+		// --------------------------------------------------
+		case 6: return test_run(pInst, pCommand);
+
+		// SCRIPT
+		// --------------------------------------------------
+		case 7: return script_run(pInst, pCommand);
 	}
 
 	return 1;

@@ -1,0 +1,7 @@
+RUN ../benchmarks/poly_small_scope/atax/program
+RUN ../benchmarks/poly_small_scope/doitgen/program
+RUN ../benchmarks/poly_small_scope/floyd-warshall/program
+RUN ../benchmarks/poly_small_scope/2mm/program
+RUN ../benchmarks/poly_small_scope/3mm/program
+RUN ../benchmarks/poly_small_scope/mvt/program
+RUN ../benchmarks/poly_small_scope/nussinov/program

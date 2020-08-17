@@ -20,15 +20,15 @@
 #define MAX_WRITE_BYTES 		BUFFER_SIZE_BYTES-OVERHEAD_WRITE_BYTES
 
 // protocol defines
-#define PROTOCOL_INIT_PACKET 	0x00000000
-#define PROTOCOL_FLAG_READ 		0x00000000
-#define PROTOCOL_FLAG_WRITE 	0x00001000
-#define PROTOCOL_FLAG_MULTIWORD 0x00002000
-#define PROTOCOL_FLAG_CONFIG  	0x00004000
-#define PROTOCOL_MASK_MULTIWORD 0x00000FFF
+#define PROTOCOL_INIT_PACKET 			0x00000000
+#define PROTOCOL_FLAG_READ 				0x00000000
+#define PROTOCOL_FLAG_WRITE 			0x00001000
+#define PROTOCOL_FLAG_MULTIWORD 		0x00002000
+#define PROTOCOL_FLAG_CONFIG  			0x00004000
+#define PROTOCOL_FLAG_CACHE_FUSION  	0x00010000
+#define PROTOCOL_FLAG_SAMPLER_FUSION  	0x00020000
+#define PROTOCOL_MASK_MULTIWORD 		0x00000FFF
 
-
- 	
 
 pHandle 	protocol_connect 		(void);
 // description: 			- non-blocking
@@ -69,12 +69,21 @@ uint32_t 	protocol_write 			(pHandle, char *pBuffer, uint32_t n_bytes, uint32_t 
 // n_bytes: 				number of bytes to write
 // addr: 					address of where to begin writing to
 
-uint32_t 	protocol_fpga_config 	(pHandle, uint32_t data, uint32_t addr);
+uint32_t 	protocol_fpga_config 	(pHandle, uint32_t addr, uint32_t data);
 // description: 			- blocking
 //  						- legacy command
 // return: 					0: pass, 1: fail 
 // pHandle: 				handle
 // data: 					configuration data
 // addr: 					configuration address
+
+uint32_t 	protocol_cache_fusion 	(pHandle, char *pBuffer, uint32_t addr, uint32_t data);
+// description: 			- blocking
+//  						- legacy command
+// 							- executes a compound command
+// return: 					0: pass, 1: fail 
+// pHandle: 				handle
+// data: 					primary fusion address
+// addr: 					fusion data/secondary address
 
 #endif
