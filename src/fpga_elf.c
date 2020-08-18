@@ -145,7 +145,7 @@ uint32_t dma_elf_data(pHandle pInst, char *filename, uint32_t address, uint32_t 
 			// check data
 			for (uint32_t k = 0; k < file_size; k = k + 1){
 				if (pBuffer[k] != pBufferVerify[k]){
-					printf("Bad\n");
+					printf("Verification failed\n");
 					return 1;
 				}
 			}
